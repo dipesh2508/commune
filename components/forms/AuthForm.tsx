@@ -7,7 +7,7 @@ import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 import AuthSocialButton from "@/components/ui/AuthSocialButton";
 
-import {BsGithub, BsGoogle} from "react-icons/bs";
+import { BsGithub, BsGoogle } from "react-icons/bs";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -101,32 +101,37 @@ const AuthForm = () => {
             </div>
           </div>
 
-            <div className="mt-6 flex gap-2">
-              <AuthSocialButton icon={BsGithub} onClick={()=> socialAction('github')} />
-              <AuthSocialButton icon={BsGoogle} onClick={()=> socialAction('google')} />
-            </div>
+          <div className="mt-6 flex gap-2">
+            <AuthSocialButton
+              icon={BsGithub}
+              onClick={() => socialAction("github")}
+            />
+            <AuthSocialButton
+              icon={BsGoogle}
+              onClick={() => socialAction("google")}
+            />
           </div>
-          <div 
+        </div>
+        <div
           className="
-            flex 
-            gap-2 
-            justify-center 
-            text-sm 
             mt-6 
+            flex 
+            justify-center 
+            gap-2 
             px-2 
+            text-sm 
             text-gray-500
           "
         >
           <div>
-            {variant === 'LOGIN' ? 'New to Messenger?' : 'Already have an account?'} 
+            {variant === "LOGIN"
+              ? "New to Messenger?"
+              : "Already have an account?"}
           </div>
-          <div 
-            onClick={toggleVariant} 
-            className="underline cursor-pointer"
-          >
-            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
+          <div onClick={toggleVariant} className="cursor-pointer underline">
+            {variant === "LOGIN" ? "Create an account" : "Login"}
           </div>
-            </div>
+        </div>
       </div>
     </div>
   );
