@@ -5,6 +5,7 @@ import { FieldValues, useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -20,11 +21,13 @@ const AuthForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const router = useRouter();
+
   useEffect(() => {
-    if(session?.status === "authenticated") {
-      console.log('Authenticated');
+    if (session?.status === "authenticated") {
+      router.push("/users");
     }
-  }, [session?.status]);
+  }, [session?.status, router]);
 
   const toggleVariant = useCallback(() => {
     if (variant === "LOGIN") {
@@ -52,6 +55,7 @@ const AuthForm = () => {
     if (variant === "REGISTER") {
       axios
         .post("/api/register", data)
+        .then(() => signIn("credentials", data))
         .catch(() => toast.error("Something went wrong!"))
         .finally(() => setIsLoading(false));
     }
@@ -68,6 +72,7 @@ const AuthForm = () => {
 
           if (callback?.ok && !callback?.error) {
             toast.success("Logged in successfully!");
+            router.push("/users");
           }
         })
         .finally(() => setIsLoading(false));
@@ -80,16 +85,16 @@ const AuthForm = () => {
     signIn(action, {
       redirect: false,
     })
-    .then((callback) => {
-      if (callback?.error) {
-        toast.error("Something went wrong!");
-      }
+      .then((callback) => {
+        if (callback?.error) {
+          toast.error("Something went wrong!");
+        }
 
-      if (callback?.ok && !callback?.error) {
-        toast.success("Logged in successfully!");
-      }
-    })
-    .finally(() => setIsLoading(false));
+        if (callback?.ok && !callback?.error) {
+          toast.success("Logged in successfully!");
+        }
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
