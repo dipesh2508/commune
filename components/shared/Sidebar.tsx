@@ -1,18 +1,14 @@
-import DesktopSidebar from "@/components/shared/DesktopSidebar"
+import DesktopSidebar from "@/components/shared/DesktopSidebar";
+import MobileFooter from "@/components/shared/MobileFooter";
 
-const Sidebar = async ({
-    children
-}: {
-    children: React.ReactNode;
-}) => {
+const Sidebar = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="h-full">
-        <DesktopSidebar />
-        <main className="lg:pl-20 h-full">
-        {children}
-        </main>
+      <DesktopSidebar />
+      <MobileFooter />
+      <main className="h-full lg:pl-20">{children}</main>
     </div>
-  )
-}
+  );
+};
 
 export default Sidebar;
