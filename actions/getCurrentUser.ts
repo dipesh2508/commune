@@ -24,3 +24,5 @@ const getCurrentUser = async () => {
     console.error(error);
   }
 };
+
+export default getCurrentUser;
