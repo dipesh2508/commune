@@ -2,6 +2,7 @@
 
 import { User } from "@prisma/client";
 import Image from "next/image";
+import avatar from '@/assets/Images/placeholder.jpg'
 
 interface AvatarProps {
   user?: User;
@@ -24,7 +25,7 @@ const Avatar: React.FC<AvatarProps> = ({ user }) => {
       >
         <Image
           className="h-full w-full rounded-full object-cover"
-          src={user?.image || "/images/avatar.png"}
+          src={user?.image || avatar}
           alt="avatar"
           fill
         />
