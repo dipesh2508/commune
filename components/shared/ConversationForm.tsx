@@ -5,76 +5,85 @@ import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import MessageInput from "./MessageInput";
+import { CldUploadButton } from "next-cloudinary";
 
 const ConversationForm = () => {
-    const { conversationId } = useConversation();
+  const { conversationId } = useConversation();
 
   const {
     register,
     handleSubmit,
     setValue,
-    formState: {
-      errors,
-    }
+    formState: { errors },
   } = useForm<FieldValues>({
     defaultValues: {
-      message: ''
-    }
+      message: "",
+    },
   });
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    setValue('message', '', { shouldValidate: true });
-    axios.post('/api/messages', {
+    setValue("message", "", { shouldValidate: true });
+    axios.post("/api/messages", {
       ...data,
+      conversationId: conversationId,
+    });
+  };
+
+  const handleUpload = (result: any) => {
+    axios.post('/api/messages', {
+      image: result.info.secure_url,
       conversationId: conversationId
     })
   }
 
   return (
-    <div 
+    <div
       className="
-        py-4 
-        px-4 
-        bg-white 
-        border-t 
         flex 
+        w-full 
         items-center 
         gap-2 
-        lg:gap-4 
-        w-full
+        border-t 
+        bg-white 
+        px-4 
+        py-4 
+        lg:gap-4
       "
     >
-        <HiPhoto size={30} className="text-sky-500 hover:text-sky-600"/>
-        <form 
-        onSubmit={handleSubmit(onSubmit)} 
-        className="flex items-center gap-2 lg:gap-4 w-full"
+      <CldUploadButton
+        options={{maxFiles: 1}}
+        onUpload={handleUpload}
+        uploadPreset="dmhuvwzt"
       >
-        <MessageInput 
-          id="message" 
-          register={register} 
-          errors={errors} 
-          required 
+        <HiPhoto size={30} className="text-sky-500 hover:text-sky-600" />
+      </CldUploadButton>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex w-full items-center gap-2 lg:gap-4"
+      >
+        <MessageInput
+          id="message"
+          register={register}
+          errors={errors}
+          required
           placeholder="Write a message"
         />
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="
-            rounded-full 
-            p-2 
-            bg-sky-500 
             cursor-pointer 
-            hover:bg-sky-600 
-            transition
+            rounded-full 
+            bg-sky-500 
+            p-2 
+            transition 
+            hover:bg-sky-600
           "
         >
-          <HiPaperAirplane
-            size={18}
-            className="text-white"
-          />
+          <HiPaperAirplane size={18} className="text-white" />
         </button>
       </form>
     </div>
-  )
+  );
 };
 
 export default ConversationForm;
