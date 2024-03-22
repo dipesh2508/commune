@@ -8,11 +8,11 @@ import { format } from "date-fns";
 import Image from "next/image";
 
 interface MessageBoxProps {
-  inLast?: boolean;
+  isLast: boolean;
   data: FullMessageType;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({ inLast, data }) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ isLast, data }) => {
   const session = useSession();
 
   const isOwn = session?.data?.user?.email === data?.sender?.email;
@@ -60,6 +60,11 @@ const MessageBox: React.FC<MessageBoxProps> = ({ inLast, data }) => {
                 </div>
             )}
         </div>
+        {isLast && isOwn && seenList.length > 0 && (
+          <div className="text-xs fon-light text-gray-500">
+            {`Seen by ${seenList}`}
+          </div>
+        )}
       </div>
     </div>
   );
