@@ -3,7 +3,7 @@
 import useConversation from "@/hooks/useConversation"
 import { FullMessageType } from "@/types"
 import { useEffect, useRef, useState } from "react"
-import MessageBox from "./MessageBox"
+import MessageBox from "../shared/MessageBox"
 import axios from "axios"
 
 interface ConversationBodyProps {
