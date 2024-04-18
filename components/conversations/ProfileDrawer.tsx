@@ -9,6 +9,7 @@ import { HiX } from "react-icons/hi";
 import { IoTrash } from "react-icons/io5";
 import Avatar from "../Avatar";
 import Modal from "../shared/Modal";
+import ConfirmModal from "./ConfirmModal";
 
 interface IProfileDrawerProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
   data,
 }) => {
   const otherUser = useOtherUser(data);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const joinDate = useMemo(() => {
     return format(new Date(otherUser.createdAt), "PP");
@@ -42,11 +43,8 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
   }, [data]);
   return (
     <>
-      <Modal isOpen={isModalOpen} onClose={()=> setIsModalOpen(false)}>
-        <div className="bg-white p-5">
-          <p>Hello Modal</p>
-        </div>
-        </Modal>
+      <ConfirmModal isOpen={confirmOpen} onClose={()=> setConfirmOpen(false)} />
+
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child
@@ -100,7 +98,7 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
                           <div className="my-8 flex gap-10">
                             <div
                               className="flex cursor-pointer flex-col items-center gap-3 hover:opacity-75"
-                              onClick={() => setIsModalOpen(true)}
+                              onClick={() => setConfirmOpen(true)}
                             >
                               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-neutral-100">
                                 <IoTrash size={20} />
