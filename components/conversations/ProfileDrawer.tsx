@@ -10,6 +10,7 @@ import { IoTrash } from "react-icons/io5";
 import Avatar from "../Avatar";
 import Modal from "../shared/Modal";
 import ConfirmModal from "./ConfirmModal";
+import AvatarGroup from "../AvatarGroup";
 
 interface IProfileDrawerProps {
   isOpen: boolean;
@@ -30,6 +31,10 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
     return format(new Date(otherUser.createdAt), "PP");
   }, [otherUser.createdAt]);
 
+  const groupCreated = useMemo(() => {
+    return format(new Date(data.createdAt), "PP");
+  }, [data.createdAt]);
+
   const title = useMemo(() => {
     return data.name || otherUser.name;
   }, [data.name, otherUser.name]);
@@ -43,7 +48,10 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
   }, [data]);
   return (
     <>
-      <ConfirmModal isOpen={confirmOpen} onClose={()=> setConfirmOpen(false)} />
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+      />
 
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
@@ -89,7 +97,11 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
                       <div className="relative mt-6 px-4 sm:px-6">
                         <div className="flex flex-col items-center gap-3">
                           <div className="mb-2">
-                            <Avatar user={otherUser} />
+                            {data.isGroup ? (
+                              <AvatarGroup users={data.users} />
+                            ) : (
+                              <Avatar user={otherUser} />
+                            )}
                           </div>
                           <div>{title}</div>
                           <div className="text-sm text-gray-500">
@@ -110,6 +122,47 @@ const ProfileDrawer: React.FC<IProfileDrawerProps> = ({
                           </div>
                           <div className="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                             <dl className="space-y-8 px-4 sm:space-y-6 sm:px-6">
+                            {data.isGroup && (
+                                <>
+                                  <div>
+                                    <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                      Group Chat Created
+                                    </dt>
+                                    <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                                      <time dateTime={groupCreated}>
+                                        {groupCreated}
+                                      </time>
+                                    </dd>
+                                  </div>
+                                </>
+                              )}
+                              {data.isGroup && (
+                                <div>
+                                  <hr />
+                                  <dt className="text-sm font-medium mt-4 text-gray-500 sm:w-40 sm:flex-shrink-0">
+                                    Members
+                                  </dt>
+                                  <dd className="mt-3 text-sm flex flex-col gap-2 text-gray-900 sm:col-span-2">
+                                    {data.users.map((user) => 
+                                    (
+                                      <div key={user.id} className="flex items-center gap-2">
+                                        <div className="flex items-center justify-center">
+
+                                        <Avatar user={user} />
+                                        </div>
+                                        <div className="flex flex-col">
+
+
+                                        <div className="text-base font-medium">{user.name}</div>
+                                        <div className="text-xs">{user.email}</div>
+                                        </div>
+                                      </div>
+                                    )
+                                    )}
+                                  </dd>
+                                </div>
+                                
+                              )}
                               {!data.isGroup && (
                                 <div className="">
                                   <dt className="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0">
