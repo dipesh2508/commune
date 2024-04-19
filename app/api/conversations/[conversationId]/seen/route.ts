@@ -1,4 +1,5 @@
 import getCurrentUser from "@/actions/getCurrentUser";
+import { pusherServer } from "@/libs/pusher";
 import { NextResponse } from "next/server";
 
 interface IParams {
@@ -7,10 +8,10 @@ interface IParams {
 
 export async function POST(request: Request, { params }: { params: IParams }) {
   try {
-    const currentUseer = await getCurrentUser();
+    const currentUser = await getCurrentUser();
     const { conversationId } = params;
 
-    if (!currentUseer) {
+    if (!currentUser) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -51,11 +52,22 @@ export async function POST(request: Request, { params }: { params: IParams }) {
       data: {
         seen: {
           connect: {
-            id: currentUseer.id,
+            id: currentUser.id,
           },
         },
       },
     });
+        
+    await pusherServer.trigger(currentUser.email!, 'conversation:update',{
+      id: conversation.id,
+      messages: [updatedMessage]
+    });
+
+  if(lastMessage.seenIds.indexOf(currentUser.id) !== -1){
+    return NextResponse.json(conversation);
+  }
+
+  await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
     return NextResponse.json(updatedMessage);
   } catch (e: any) {
