@@ -29,7 +29,7 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
 
     bottomRef?.current?.scrollIntoView();
 
-    const messageHandler = (message: FullMessageType) => {
+    const messageHandler = async (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
       setMessages((current) => {
         if (find(current, { id: message.id })) {
