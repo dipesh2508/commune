@@ -27,29 +27,28 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
   useEffect(() => {
     pusherClient.subscribe(conversationId);
 
-    bottomRef?.current?.scrollIntoView();
-
     const messageHandler = async (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
       setMessages((current) => {
         if (find(current, { id: message.id })) {
           return current;
         }
-
+        
         return [...current, message];
       });
-
-      bottomRef?.current?.scrollIntoView();
+      
     };
 
+    
     const updateMessageHandler = (newMessage: FullMessageType) => {
       setMessages((current) => current.map((currentMessage) => {
         if (currentMessage.id === newMessage.id) {
           return newMessage;
         }
-
+        
         return currentMessage;
-    }));
+      }));
+      bottomRef?.current?.scrollIntoView();
   }
 
     pusherClient.bind("messages:new", messageHandler);
