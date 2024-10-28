@@ -25,6 +25,10 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
   }, [conversationId]);
 
   useEffect(() => {
+    bottomRef?.current?.scrollIntoView();
+  }, [messages]);
+
+  useEffect(() => {
     pusherClient.subscribe(conversationId);
 
     const messageHandler = async (message: FullMessageType) => {
@@ -36,7 +40,6 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
         
         return [...current, message];
       });
-      
     };
 
     
@@ -62,7 +65,7 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
   }, [conversationId]);
   return (
     <div className="flex-1 overflow-y-auto">
-      <div ref={bottomRef} className="pt-24">
+      <div className="pt-24">
         {messages.map((message, i) => (
           <MessageBox
             isLast={i === messages.length - 1}
@@ -70,6 +73,7 @@ const ConversationBody: React.FC<ConversationBodyProps> = ({
             data={message}
           />
         ))}
+        <div ref={bottomRef} />
       </div>
     </div>
   );
